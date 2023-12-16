@@ -32,7 +32,7 @@ class _HomePageState extends State<HomePage> {
       );
       return;
     }
-    int lastTodoId = todos.last['id'];
+    int lastTodoId = todos.isNotEmpty ? todos.last['id'] : 1;
     final todo = {
       'id': lastTodoId + 1,
       'taskName': _textController.text,
@@ -44,6 +44,7 @@ class _HomePageState extends State<HomePage> {
 
   void onRemoveTodo(int index) {
     todos.removeAt(index);
+    setState(() {});
   }
 
   void createTodo() {
