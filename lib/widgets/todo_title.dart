@@ -16,18 +16,21 @@ class TodoTitle extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
+    return Container(
       height: 70,
+      margin: const EdgeInsets.only(bottom: 10),
       child: Slidable(
         endActionPane: ActionPane(motion: const StretchMotion(), children: [
           SlidableAction(
-              onPressed: onDelete,
-              icon: Icons.delete,
-              backgroundColor: Colors.red.shade500)
+            onPressed: onDelete,
+            icon: Icons.delete,
+            backgroundColor: Colors.red.shade500,
+            borderRadius: const BorderRadius.only(
+                topRight: Radius.circular(7), bottomRight: Radius.circular(7)),
+          ),
         ]),
         child: Container(
           padding: const EdgeInsets.all(10),
-          margin: const EdgeInsets.only(bottom: 10),
           decoration: BoxDecoration(
               color: Theme.of(context).primaryColor,
               borderRadius: BorderRadius.circular(7)),
