@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:hive_flutter/hive_flutter.dart';
+import 'package:todo/db/TodoDatabase.dart';
 import 'package:todo/widgets/new_todo_dialog.dart';
 import 'package:todo/widgets/todo_title.dart';
 
@@ -12,11 +14,19 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   final _textController = TextEditingController();
 
-  List<Map<String, dynamic>> todos = [
-    {'id': 1, 'taskName': "Buy groceries", 'taskCompleted': false},
-    {'id': 2, 'taskName': "Finish report", 'taskCompleted': true},
-    {'id': 3, 'taskName': "Call the dentist", 'taskCompleted': false},
-  ];
+  final _todoBox = Hive.box('_todo_box');
+
+  TodoDatabase db = TodoDatabase();
+
+  @override
+  void initState() {
+    if (_todoBox.get('TODOS') == null) {
+      db.createInitialData();
+    } else {
+      db.loadDb();
+    }
+    super.initState();
+  }
 
   void onSaveTodo() {
     Navigator.of(context).pop();
@@ -32,19 +42,21 @@ class _HomePageState extends State<HomePage> {
       );
       return;
     }
-    int lastTodoId = todos.isNotEmpty ? todos.last['id'] : 1;
+    int lastTodoId = db.todos.isNotEmpty ? db.todos.last['id'] : 1;
     final todo = {
       'id': lastTodoId + 1,
       'taskName': _textController.text,
       'taskCompleted': false
     };
-    todos.add(todo);
-    setState(() {});
+    db.todos.add(todo);
+    db.updateDb();
+    // setState(() {});
   }
 
   void onRemoveTodo(int index) {
-    todos.removeAt(index);
-    setState(() {});
+    db.todos.removeAt(index);
+    db.updateDb();
+    // setState(() {});
   }
 
   void createTodo() {
@@ -61,8 +73,9 @@ class _HomePageState extends State<HomePage> {
   }
 
   void onToggleCompleted(bool? status, int index) {
-    todos[index]['taskCompleted'] = !todos[index]['taskCompleted'];
-    setState(() {});
+    db.todos[index]['taskCompleted'] = !db.todos[index]['taskCompleted'];
+    db.updateDb();
+    // setState(() {});
   }
 
   @override
@@ -81,9 +94,9 @@ class _HomePageState extends State<HomePage> {
       ),
       body: ListView.builder(
         padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 30),
-        itemCount: todos.length,
+        itemCount: db.todos.length,
         itemBuilder: (context, index) {
-          final item = todos[index];
+          final item = db.todos[index];
           return TodoTitle(
             onChanged: (v) => onToggleCompleted(v, index),
             taskCompleted: item['taskCompleted'],
