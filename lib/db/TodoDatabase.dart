@@ -1,7 +1,7 @@
 import 'package:hive_flutter/hive_flutter.dart';
 
 class TodoDatabase {
-  List<Map<String, dynamic>> todos = [];
+  List todos = [];
 
   final todoBox = Hive.box('_todo_box');
 

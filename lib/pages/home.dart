@@ -50,13 +50,13 @@ class _HomePageState extends State<HomePage> {
     };
     db.todos.add(todo);
     db.updateDb();
-    // setState(() {});
+    setState(() {});
   }
 
   void onRemoveTodo(int index) {
     db.todos.removeAt(index);
     db.updateDb();
-    // setState(() {});
+    setState(() {});
   }
 
   void createTodo() {
@@ -75,7 +75,7 @@ class _HomePageState extends State<HomePage> {
   void onToggleCompleted(bool? status, int index) {
     db.todos[index]['taskCompleted'] = !db.todos[index]['taskCompleted'];
     db.updateDb();
-    // setState(() {});
+    setState(() {});
   }
 
   @override
